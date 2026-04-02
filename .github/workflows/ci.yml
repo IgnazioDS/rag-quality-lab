@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Type check (mypy)
+        run: mypy rag_quality_lab
+        env:
+          OPENAI_API_KEY: sk-dummy
+          DATABASE_URL: postgresql://lab:lab@localhost:5432/raglab
+
+      - name: Run tests (unit only)
+        run: pytest -q -m "not integration"
+        env:
+          OPENAI_API_KEY: sk-dummy
+          DATABASE_URL: postgresql://lab:lab@localhost:5432/raglab
+          SKIP_INTEGRATION: "1"
