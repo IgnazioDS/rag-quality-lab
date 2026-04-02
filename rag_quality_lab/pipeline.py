@@ -78,7 +78,8 @@ def _upsert_corpus(
     strategy_params: dict[str, Any],
 ) -> None:
     sql = """
-        INSERT INTO corpora (corpus_id, name, doc_count, chunk_count, strategy_name, strategy_params)
+        INSERT INTO corpora
+            (corpus_id, name, doc_count, chunk_count, strategy_name, strategy_params)
         VALUES (%s, %s, %s, %s, %s, %s)
         ON CONFLICT (corpus_id) DO UPDATE SET
             chunk_count = EXCLUDED.chunk_count

@@ -1,7 +1,6 @@
 """Deterministic tests for all chunking strategies."""
 from __future__ import annotations
 
-import math
 from unittest.mock import MagicMock
 
 import numpy as np

@@ -11,14 +11,12 @@ from __future__ import annotations
 
 import json
 import os
-import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from rag_quality_lab.chunkers.fixed_size import FixedSizeChunker
-from rag_quality_lab.models import RetrievalResult
 
 # Skip integration tests when Docker is not available
 _SKIP_INTEGRATION = os.environ.get("SKIP_INTEGRATION", "0") == "1"
@@ -112,7 +110,6 @@ def test_pipeline_writes_result_json(
     conn.close()
 
     assert len(runs) == 1
-    run = runs[0]
 
     # Verify result file was written
     results_dir = tmp_path / "results"

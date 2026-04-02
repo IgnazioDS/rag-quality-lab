@@ -1,8 +1,6 @@
 import logging
 from typing import Any
 
-import psycopg2
-
 from rag_quality_lab.embedders.base import BaseEmbedder
 from rag_quality_lab.models import RetrievalResult
 from rag_quality_lab.retrievers.base import BaseRetriever

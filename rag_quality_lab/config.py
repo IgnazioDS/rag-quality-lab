@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,8 +11,16 @@ class LabConfig(BaseSettings):
         extra="ignore",
     )
 
-    openai_api_key: str = Field(..., description="OpenAI API key for embeddings and judge")
-    database_url: str = Field(..., description="PostgreSQL connection string with pgvector")
+    openai_api_key: str = Field(default="", description="OpenAI API key for embeddings and judge")
+    database_url: str = Field(default="", description="PostgreSQL connection string with pgvector")
+
+    @model_validator(mode="after")
+    def check_required_fields(self) -> "LabConfig":
+        if not self.openai_api_key:
+            raise ValueError("OPENAI_API_KEY environment variable is required")
+        if not self.database_url:
+            raise ValueError("DATABASE_URL environment variable is required")
+        return self
 
     embedding_model: str = Field(
         default="text-embedding-3-small",
