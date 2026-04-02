@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment
+.env
+
+# Cache
+.cache/
+*.json.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ruff
+.ruff_cache/
+
+# Data — corpora and queries are downloaded at runtime
+data/corpora/*
+data/queries/*
+!data/corpora/.gitkeep
+!data/queries/.gitkeep
+
+# Benchmarks workspace
+benchmarks/*
+!benchmarks/.gitkeep
+
+# NOTE: results/ is intentionally NOT ignored.
+# Result JSON files are committed as the primary deliverable.
