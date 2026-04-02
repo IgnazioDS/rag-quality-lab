@@ -16,8 +16,11 @@ from rich.table import Table
 
 sys.path.insert(0, ".")
 from rag_quality_lab.chunkers import FixedSizeChunker, RecursiveChunker, SemanticChunker
+from rag_quality_lab.chunkers.base import BaseChunker
 from rag_quality_lab.config import config
+from rag_quality_lab.embedders.base import BaseEmbedder
 from rag_quality_lab.embedders.openai import OpenAIEmbedder
+from rag_quality_lab.models import Chunk
 from rag_quality_lab.pipeline import BenchmarkPipeline
 from rag_quality_lab.retrievers.dense import DenseRetriever
 from rag_quality_lab.retrievers.hybrid import HybridRetriever
@@ -28,7 +31,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
 
-def build_chunkers(strategies: list[str], embedder: object) -> list[object]:
+def build_chunkers(strategies: list[str], embedder: BaseEmbedder) -> list[BaseChunker]:
     chunkers = []
     for strategy in strategies:
         if strategy == "fixed":
@@ -45,9 +48,9 @@ def build_chunkers(strategies: list[str], embedder: object) -> list[object]:
 def build_retriever_configs(
     retriever_names: list[str],
     conn: object,
-    embedder: object,
+    embedder: BaseEmbedder,
     corpus_id: str,
-    corpus_chunks: list,
+    corpus_chunks: list[Chunk],
 ) -> list[dict]:
     configs = []
 
@@ -136,8 +139,10 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    strategies = ["fixed", "recursive", "semantic"] if args.all_strategies else (args.strategies or ["fixed"])
-    retrievers = ["dense", "sparse", "hybrid"] if args.all_retrievers else (args.retrievers or ["dense"])
+    all_strategies = ["fixed", "recursive", "semantic"]
+    strategies = all_strategies if args.all_strategies else (args.strategies or ["fixed"])
+    all_retrievers = ["dense", "sparse", "hybrid"]
+    retrievers = all_retrievers if args.all_retrievers else (args.retrievers or ["dense"])
 
     corpus_dir = Path("data/corpora") / args.corpus
     queries_path = Path("data/queries") / f"{args.corpus}.jsonl"
